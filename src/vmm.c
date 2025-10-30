@@ -61,7 +61,7 @@ void vmm_config_print(VMMConfig *config, FILE *out)
     fprintf(out, "  RAM:              %u MB (%u frames)\n", config->ram_size_mb,
             config->num_frames);
     fprintf(out, "  Page size:        %u bytes\n", config->page_size);
-    fprintf(out, "  Virtual space:    %lu bytes (%.1f GB)\n", config->virtual_addr_space,
+    fprintf(out, "  Virtual space:    %llu bytes (%.1f GB)\n", (unsigned long long)config->virtual_addr_space,
             config->virtual_addr_space / (1024.0 * 1024 * 1024));
     fprintf(out, "  TLB:              %u entries (%s)\n", config->tlb_size,
             config->tlb_policy == TLB_FIFO ? "FIFO" : "LRU");
@@ -433,7 +433,8 @@ bool vmm_run_trace(VMM *vmm, Trace *trace)
 
         // Progress indicator
         if (vmm->config.verbose && i > 0 && i % 10000 == 0) {
-            fprintf(stderr, "Progress: %lu / %lu accesses (%.1f%%)\r", i, max_accesses,
+            fprintf(stderr, "Progress: %llu / %llu accesses (%.1f%%)\r", 
+                    (unsigned long long)i, (unsigned long long)max_accesses,
                     100.0 * i / max_accesses);
         }
     }

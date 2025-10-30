@@ -3,6 +3,7 @@
  */
 
 #include "replacement.h"
+#include "trace.h"
 #include "util.h"
 #include <stdlib.h>
 #include <string.h>

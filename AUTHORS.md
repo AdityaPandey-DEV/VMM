@@ -42,15 +42,19 @@
 ---
 
 ### Gaurang
-**Role:** Testing & Quality Assurance  
+**Role:** System Integration & Testing Lead  
 **Contributions:**
-- Trace parsing and generation engine
-- Synthetic trace patterns (sequential, random, locality, working set, thrashing)
-- Complete test suite and automation framework
-- Comprehensive documentation (README, DESIGN, API, TESTPLAN)
-- Quality assurance and validation
+- **Trace parsing and generation engine** - 5 sophisticated patterns
+- **Main CLI interface** - professional argument parsing with validation
+- **Logging and utilities system** - color-coded logging, bit manipulation helpers
+- **Complete test suite** - 10 automated tests with quantitative validation
+- **Comprehensive documentation** - README, DESIGN, API, TESTPLAN, Hinglish guides
+- **System integration** - bringing all components together
+- **Quality assurance** - ensuring production-ready code
 
-**Focus Areas:** Testing infrastructure, trace simulation, documentation
+**Focus Areas:** System integration, testing infrastructure, trace simulation, CLI/UX, documentation
+
+**Key Achievement:** Made the entire system accessible and usable - from input (traces) to output (metrics) to testing (validation)
 
 ---
 

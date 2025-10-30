@@ -30,6 +30,7 @@ SOURCES = $(SRCDIR)/main.c \
           $(SRCDIR)/util.c
 
 TRACE_GEN_SOURCES = $(SRCDIR)/trace_gen.c \
+                    $(SRCDIR)/trace.c \
                     $(SRCDIR)/util.c
 
 OBJECTS = $(SOURCES:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
