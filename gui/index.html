@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VMM Simulator - Virtual Memory Manager</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1>🖥️ Virtual Memory Manager Simulator</h1>
+                <p class="subtitle">Interactive Virtual Memory Visualization Tool</p>
+                <div class="authors">
+                    <span class="author-badge">Aditya Pandey</span>
+                    <span class="author-badge">Kartik</span>
+                    <span class="author-badge">Vivek</span>
+                    <span class="author-badge">Gaurang</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Configuration Panel -->
+        <section class="config-panel">
+            <h2>⚙️ Configuration</h2>
+            <div class="config-grid">
+                <div class="config-item">
+                    <label for="ram-size">RAM Size (MB):</label>
+                    <input type="number" id="ram-size" value="64" min="8" max="1024">
+                </div>
+                <div class="config-item">
+                    <label for="page-size">Page Size (bytes):</label>
+                    <select id="page-size">
+                        <option value="4096" selected>4096 (4KB)</option>
+                        <option value="8192">8192 (8KB)</option>
+                        <option value="16384">16384 (16KB)</option>
+                    </select>
+                </div>
+                <div class="config-item">
+                    <label for="tlb-size">TLB Size:</label>
+                    <input type="number" id="tlb-size" value="64" min="4" max="256">
+                </div>
+                <div class="config-item">
+                    <label for="algorithm">Replacement Algorithm:</label>
+                    <select id="algorithm">
+                        <option value="FIFO">FIFO</option>
+                        <option value="LRU">LRU</option>
+                        <option value="CLOCK" selected>Clock</option>
+                        <option value="APPROX_LRU">Approx-LRU</option>
+                        <option value="OPT">OPT (Optimal)</option>
+                    </select>
+                </div>
+                <div class="config-item">
+                    <label for="trace-pattern">Trace Pattern:</label>
+                    <select id="trace-pattern">
+                        <option value="sequential">Sequential</option>
+                        <option value="random">Random</option>
+                        <option value="working_set" selected>Working Set</option>
+                        <option value="locality">Locality</option>
+                        <option value="thrashing">Thrashing</option>
+                    </select>
+                </div>
+                <div class="config-item">
+                    <label for="num-accesses">Memory Accesses:</label>
+                    <input type="number" id="num-accesses" value="1000" min="100" max="100000" step="100">
+                </div>
+            </div>
+            <div class="button-group">
+                <button id="generate-trace-btn" class="btn btn-primary">Generate Trace</button>
+                <button id="run-simulation-btn" class="btn btn-success">Run Simulation</button>
+                <button id="step-btn" class="btn btn-secondary">Step</button>
+                <button id="reset-btn" class="btn btn-danger">Reset</button>
+            </div>
+        </section>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Left Panel - Visualization -->
+            <section class="visualization-panel">
+                <h2>📊 Memory Visualization</h2>
+                
+                <!-- TLB Visualization -->
+                <div class="viz-section">
+                    <h3>Translation Lookaside Buffer (TLB)</h3>
+                    <div id="tlb-grid" class="tlb-grid"></div>
+                </div>
+
+                <!-- Page Table Visualization -->
+                <div class="viz-section">
+                    <h3>Page Table (First 64 entries)</h3>
+                    <div id="page-table-grid" class="page-table-grid"></div>
+                </div>
+
+                <!-- Physical Memory (Frames) -->
+                <div class="viz-section">
+                    <h3>Physical Memory Frames</h3>
+                    <div id="frame-grid" class="frame-grid"></div>
+                </div>
+
+                <!-- Memory Access Pipeline -->
+                <div class="viz-section">
+                    <h3>Address Translation Pipeline</h3>
+                    <div class="pipeline">
+                        <div class="pipeline-stage" id="stage-virtual">
+                            <div class="stage-label">Virtual Address</div>
+                            <div class="stage-content">0x00000000</div>
+                        </div>
+                        <div class="pipeline-arrow">→</div>
+                        <div class="pipeline-stage" id="stage-tlb">
+                            <div class="stage-label">TLB</div>
+                            <div class="stage-content">IDLE</div>
+                        </div>
+                        <div class="pipeline-arrow">→</div>
+                        <div class="pipeline-stage" id="stage-pagetable">
+                            <div class="stage-label">Page Table</div>
+                            <div class="stage-content">IDLE</div>
+                        </div>
+                        <div class="pipeline-arrow">→</div>
+                        <div class="pipeline-stage" id="stage-physical">
+                            <div class="stage-label">Physical Address</div>
+                            <div class="stage-content">0x00000000</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right Panel - Metrics -->
+            <section class="metrics-panel">
+                <h2>📈 Performance Metrics</h2>
+                
+                <!-- Real-time Stats -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Total Accesses</div>
+                        <div class="stat-value" id="stat-accesses">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Page Faults</div>
+                        <div class="stat-value" id="stat-faults">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Fault Rate</div>
+                        <div class="stat-value" id="stat-fault-rate">0.00%</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">TLB Hits</div>
+                        <div class="stat-value" id="stat-tlb-hits">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">TLB Misses</div>
+                        <div class="stat-value" id="stat-tlb-misses">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">TLB Hit Rate</div>
+                        <div class="stat-value" id="stat-tlb-rate">0.00%</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Swap-ins</div>
+                        <div class="stat-value" id="stat-swap-ins">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Swap-outs</div>
+                        <div class="stat-value" id="stat-swap-outs">0</div>
+                    </div>
+                </div>
+
+                <!-- Charts -->
+                <div class="chart-container">
+                    <h3>Page Fault Rate Over Time</h3>
+                    <canvas id="fault-chart"></canvas>
+                </div>
+
+                <div class="chart-container">
+                    <h3>TLB Performance</h3>
+                    <canvas id="tlb-chart"></canvas>
+                </div>
+
+                <!-- Event Log -->
+                <div class="log-section">
+                    <h3>Event Log</h3>
+                    <div id="event-log" class="event-log"></div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Virtual Memory Manager Simulator © 2025</p>
+            <p>Developed by: Aditya Pandey, Kartik, Vivek, Gaurang</p>
+            <p>For educational and research purposes</p>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="simulator.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
+

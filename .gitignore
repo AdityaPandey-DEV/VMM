@@ -1,0 +1,46 @@
+# Build artifacts
+bin/
+obj/
+*.o
+*.d
+*.so
+*.a
+
+# Trace files
+traces/*.trace
+!traces/simple.trace
+
+# Test outputs
+tests/output/
+*.log
+*.csv
+*.json
+
+# Editor files
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+*.code-workspace
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Valgrind output
+vgcore.*
+massif.out.*
+
+# Coverage files
+*.gcda
+*.gcno
+*.gcov
+
+# Core dumps
+core
+core.*
+
+# Temporary files
+*.tmp
+
